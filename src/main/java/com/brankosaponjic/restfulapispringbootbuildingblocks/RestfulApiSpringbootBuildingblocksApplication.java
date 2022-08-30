@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class RestfulApiSpringbootBuildingblocksApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(RestfulApiSpringbootBuildingblocksApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(RestfulApiSpringbootBuildingblocksApplication.class, args);
+    }
 
 }
