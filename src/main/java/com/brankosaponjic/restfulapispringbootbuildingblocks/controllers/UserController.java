@@ -1,8 +1,11 @@
 package com.brankosaponjic.restfulapispringbootbuildingblocks.controllers;
 
 import com.brankosaponjic.restfulapispringbootbuildingblocks.entities.User;
+import com.brankosaponjic.restfulapispringbootbuildingblocks.exceptions.UserNotFoundException;
 import com.brankosaponjic.restfulapispringbootbuildingblocks.services.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +30,11 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public Optional<User> getUserById(@PathVariable("id") Long id) {
-        return userService.getUserById(id);
+        try {
+            return userService.getUserById(id);
+        } catch (UserNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+        }
     }
 
     @PutMapping("/users/{id}")

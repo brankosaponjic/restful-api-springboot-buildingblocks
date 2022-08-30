@@ -1,6 +1,7 @@
 package com.brankosaponjic.restfulapispringbootbuildingblocks.services;
 
 import com.brankosaponjic.restfulapispringbootbuildingblocks.entities.User;
+import com.brankosaponjic.restfulapispringbootbuildingblocks.exceptions.UserNotFoundException;
 import com.brankosaponjic.restfulapispringbootbuildingblocks.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +24,12 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public Optional<User> getUserById(Long id) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found in repository");
+        }
+        return user;
     }
 
     public User updateUserById(User user, Long id) {
