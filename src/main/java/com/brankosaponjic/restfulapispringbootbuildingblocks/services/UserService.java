@@ -1,6 +1,7 @@
 package com.brankosaponjic.restfulapispringbootbuildingblocks.services;
 
 import com.brankosaponjic.restfulapispringbootbuildingblocks.entities.User;
+import com.brankosaponjic.restfulapispringbootbuildingblocks.exceptions.UserAlreadyExistsException;
 import com.brankosaponjic.restfulapispringbootbuildingblocks.exceptions.UserNotFoundException;
 import com.brankosaponjic.restfulapispringbootbuildingblocks.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User createUser(User user) {
+    public User createUser(User user) throws UserAlreadyExistsException {
+        User existingUser = userRepository.findUserByUsername(user.getUsername());
+        if ((existingUser != null)) {
+            throw new UserAlreadyExistsException("Username already exists. Choose another one.");
+        }
         return userRepository.save(user);
     }
 
@@ -35,7 +40,10 @@ public class UserService {
     }
 
     public User updateUserById(User user, Long id) throws UserNotFoundException {
-
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"User not found in repository. Provide the correct user id.");
+        }
         user.setId(id);
         return userRepository.save(user);
     }
