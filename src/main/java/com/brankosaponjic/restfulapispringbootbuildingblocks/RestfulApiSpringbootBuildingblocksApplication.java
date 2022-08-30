@@ -18,7 +18,6 @@ public class RestfulApiSpringbootBuildingblocksApplication {
     public CommandLineRunner run(UserRepository repository) {
         return (args) -> {
             insertThreeUsers(repository);
-            System.out.println(repository.findAll());
         };
     }
     private void insertThreeUsers(UserRepository repository) {
