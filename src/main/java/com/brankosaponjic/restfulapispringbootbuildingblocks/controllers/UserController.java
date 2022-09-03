@@ -4,9 +4,12 @@ import com.brankosaponjic.restfulapispringbootbuildingblocks.entities.User;
 import com.brankosaponjic.restfulapispringbootbuildingblocks.exceptions.UserAlreadyExistsException;
 import com.brankosaponjic.restfulapispringbootbuildingblocks.exceptions.UserNotFoundException;
 import com.brankosaponjic.restfulapispringbootbuildingblocks.services.UserService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +28,12 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public User createUser(@RequestBody User user) {
+    public ResponseEntity<Void> createUser(@RequestBody User user, UriComponentsBuilder builder) {
         try {
-            return userService.createUser(user);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(builder.path("users/{id}").buildAndExpand(user.getId()).toUri());
+            userService.createUser(user);
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
         } catch (UserAlreadyExistsException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
