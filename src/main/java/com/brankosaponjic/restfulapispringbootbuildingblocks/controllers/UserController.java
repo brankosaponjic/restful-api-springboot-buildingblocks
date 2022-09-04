@@ -2,6 +2,7 @@ package com.brankosaponjic.restfulapispringbootbuildingblocks.controllers;
 
 import com.brankosaponjic.restfulapispringbootbuildingblocks.entities.User;
 import com.brankosaponjic.restfulapispringbootbuildingblocks.exceptions.UserAlreadyExistsException;
+import com.brankosaponjic.restfulapispringbootbuildingblocks.exceptions.UserNameNotFoundException;
 import com.brankosaponjic.restfulapispringbootbuildingblocks.exceptions.UserNotFoundException;
 import com.brankosaponjic.restfulapispringbootbuildingblocks.services.UserService;
 import org.springframework.http.HttpHeaders;
@@ -64,7 +65,11 @@ public class UserController {
     }
 
     @GetMapping("/users/byusername/{username}")
-    public User findUserByUsername(@PathVariable("username") String username) {
-        return userService.findUserByUsername(username);
+    public User findUserByUsername(@PathVariable("username") String username) throws UserNameNotFoundException {
+        User user = userService.findUserByUsername(username);
+        if (user == null) {
+            throw new UserNameNotFoundException("Username: '" + username + "' not found in User Repository.");
+        }
+        return user;
     }
 }
