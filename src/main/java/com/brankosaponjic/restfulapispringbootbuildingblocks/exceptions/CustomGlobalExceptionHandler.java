@@ -81,3 +81,5 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(customErrorDetails, HttpStatus.BAD_REQUEST);
     }
 }
+
+
